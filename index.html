@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EL EXPUENTE D' TATA | Menú Interactivo & Pedidos</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#e50914',
+                            redDark: '#b20710',
+                            black: '#0a0a0a',
+                            card: '#141414',
+                            border: '#2a2a2a',
+                            gold: '#dfb15b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Cinzel', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #e50914; }
+
+        .glow-red { box-shadow: 0 0 25px rgba(229, 9, 20, 0.25); }
+        .text-glow { text-shadow: 0 0 12px rgba(229, 9, 20, 0.6); }
+        .bridge-bg {
+            background: linear-gradient(180deg, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.98) 100%), 
+                        url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+        }
+        .category-tab.active {
+            background-color: #e50914;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+        }
+
+        /* Estilos del Alert Flotante Elegante */
+        .alert-floating {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 60;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            max-width: 420px;
+            width: calc(100% - 48px);
+            padding: 18px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            background-color: #f0fdf4;
+            color: #000;
+            border: 1px solid #501;
+            overflow: hidden;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .alert-floating::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #645;
+        }
+        .alert-floating .alert-icon {
+            color: #901;
+            flex-shrink: 0;
+        }
+        .alert-floating .alert-title {
+            margin: 0 0 4px 0;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+        .alert-floating .alert-message {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+        .alert-floating .alert-close {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            opacity: 0.5;
+            transition: opacity 0.2s ease;
+            margin-left: auto;
+            color: inherit;
+        }
+        .alert-floating .alert-close:hover {
+            opacity: 1;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .alert-floating.fade-out {
+            animation: fadeOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+        .alert-floating .alert-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background-color: currentColor;
+            opacity: 0.25;
+            transform-origin: left;
+            animation: shrinkProgress 5s linear forwards;
+        }
+        .alert-floating:hover .alert-progress {
+            animation-play-state: paused;
+        }
+        @keyframes shrinkProgress {
+            from { transform: scaleX(1); }
+            to { transform: scaleX(0); }
+        }
+    </style>
+</head>
+<body class="bg-brand-black text-gray-100 font-sans min-h-screen flex flex-col selection:bg-brand-red selection:text-white pb-24 md:pb-0">
+
+    <!-- ALERTA FLOTANTE AUTOMÁTICA -->
+    <div class="alert-floating" id="autoCloseAlert" role="alert" data-auto-close="10000">
+        <div class="alert-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">¡Recuerda!</h4>
+            <p class="alert-message">Al ordenar a domicilio indica tu dirección y número de contacto para agilizar la toma de tu orden, ¡gracias!</p>
+        </div>
+        <button class="alert-close" aria-label="Cerrar">&times;</button>
+        <div class="alert-progress"></div>
+    </div>
+
+    <!-- HEADER / HERO SECTION -->
+    <header class="bridge-bg border-b border-brand-border sticky top-0 z-30 shadow-2xl backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4 text-center md:text-left">
+                    <div class="w-16 h-16 rounded-full bg-zinc-950 border-2 border-brand-red flex items-center justify-center glow-red flex-shrink-0 p-1 relative overflow-hidden group">
+                        <img src="https://photos.app.goo.gl/EPjapg3ACiFTzEtb8" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0a/e50914?text=🍔';" 
+                             alt="Mascota El Expuente d' Tata" 
+                             class="w-full h-full object-contain drop-shadow-md group-hover:scale-110 transition duration-300">
+                    </div>
+                    <div>
+                        <h1 class="font-serif font-black text-2xl sm:text-3xl tracking-wider text-white text-glow">
+                            EL EXPUENTE D' TATA
+                        </h1>
+                        <p class="text-xs sm:text-sm text-gray-400 font-medium tracking-widest uppercase">
+                           Tradicionalmente delicioso desde <span class="text-brand-red font-bold">1997</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 w-full md:w-auto justify-center">
+                    <a href="https://wa.me/573127474810" target="_blank" class="flex items-center gap-2 bg-zinc-900 border border-zinc-800 hover:border-brand-red px-3 py-2 rounded-xl text-xs sm:text-sm transition-all duration-300">
+                        <i class="fa-brands fa-whatsapp text-emerald-500 text-base"></i>
+                        <div>
+                            <span class="block text-gray-400 text-[10px] leading-tight">Contacto directo</span>
+                            <span class="font-bold text-white tracking-wide">312 7474810</span>
+                        </div>
+                    </a>
+
+                    <button onclick="openMenuImageModal()" class="flex items-center gap-2 bg-gradient-to-r from-brand-red to-brand-redDark text-white px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm hover:brightness-110 transition duration-300 shadow-lg glow-red">
+                        <i class="fa-solid fa-image"></i>
+                        <span>Ver Carta Oficial</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Bar & Filters -->
+            <div class="mt-4 pt-3 border-t border-zinc-800/80 flex flex-col sm:flex-row gap-3 items-center justify-between">
+                <div class="relative w-full sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                    <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Buscar perro, hamburguesa, patacona..." 
+                           class="w-full pl-9 pr-8 py-2 bg-zinc-900/90 border border-zinc-800 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-red transition">
+                    <button id="clearSearch" onclick="clearSearchInput()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="w-full overflow-x-auto no-scrollbar py-1 flex items-center gap-2" id="categoriesContainer"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- PRODUCTS SECTION -->
+        <section class="lg:col-span-8 space-y-8">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <h2 id="currentCategoryTitle" class="text-xl font-bold font-serif text-white flex items-center gap-2">
+                    <span class="w-2 h-6 bg-brand-red rounded-full"></span>
+                    <span id="categoryNameText">Todas las Categorías</span>
+                </h2>
+                <span id="productCounter" class="text-xs text-gray-400 bg-zinc-900 px-3 py-1 rounded-full border border-zinc-800">Cargando...</span>
+            </div>
+
+            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+
+            <div id="noResults" class="hidden text-center py-16 bg-zinc-900/40 rounded-2xl border border-zinc-800">
+                <i class="fa-solid fa-burger text-5xl text-zinc-700 mb-3"></i>
+                <h3 class="text-lg font-semibold text-gray-300">No encontramos productos</h3>
+                <p class="text-xs text-gray-500 mt-1">Intenta buscar con otro término.</p>
+                <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-brand-red text-white text-xs font-semibold rounded-lg hover:brightness-110">Restablecer Menú</button>
+            </div>
+        </section>
+
+        <!-- CART SIDEBAR (DESKTOP) -->
+        <aside class="hidden lg:block lg:col-span-4">
+            <div class="bg-brand-card border border-brand-border rounded-2xl p-5 sticky top-28 shadow-2xl flex flex-col max-h-[calc(100vh-8rem)]">
+                <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
+                    <div class="flex items-center gap-2">
+                        <img src="https://i.ibb.co/L5hY8mB/burger-mascot.png" onerror="this.onerror=null; this.src='https://placehold.co/50x50/0a0a0a/e50914?text=🍔';" alt="Logo" class="w-7 h-7 object-contain">
+                        <h3 class="font-bold text-lg text-white">Tu Pedido</h3>
+                    </div>
+                    <span id="cartBadge" class="bg-brand-red text-white text-xs font-bold px-2.5 py-0.5 rounded-full">0 ítems</span>
+                </div>
+
+                <div id="cartItemsList" class="flex-1 overflow-y-auto my-4 space-y-3 pr-1 text-sm"></div>
+
+                <div class="border-t border-zinc-800 pt-4 space-y-3">
+                    <div class="space-y-1.5 text-xs text-gray-400">
+                        <div class="flex justify-between"><span>Subtotal:</span><span id="cartSubtotal" class="font-medium text-white">$ 0</span></div>
+                        <div class="flex justify-between"><span>Empaque & Envío:</span><span class="text-emerald-400">A convenir</span></div>
+                        <div class="flex justify-between text-base font-bold text-white pt-2 border-t border-zinc-800/60"><span>Total Estimado:</span><span id="cartTotal" class="text-brand-red font-mono">$ 0</span></div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] text-gray-400 mb-1">Notas especiales (ej: Sin cebolla)</label>
+                        <textarea id="orderNotes" rows="2" placeholder="Instrucciones adicionales..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-brand-red resize-none"></textarea>
+                    </div>
+
+                    <button onclick="sendOrderToWhatsApp('desktop')" id="checkoutBtn" disabled class="w-full py-3.5 bg-zinc-800 text-gray-500 font-bold text-sm rounded-xl flex items-center justify-center gap-2 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fa-brands fa-whatsapp text-lg"></i><span>Enviar Pedido por WhatsApp</span>
+                    </button>
+                    
+                    <button onclick="clearCart()" class="w-full py-1 text-center text-[11px] text-gray-500 hover:text-brand-red transition">Vaciar Carrito</button>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- MOBILE FLOATING CART BUTTON -->
+    <div class="lg:hidden fixed bottom-4 right-4 left-4 z-40">
+        <button onclick="openMobileCartModal()" class="w-full bg-gradient-to-r from-brand-red to-brand-redDark text-white p-3.5 rounded-2xl font-bold flex items-center justify-between shadow-2xl border border-red-500/30 glow-red">
+            <div class="flex items-center gap-3">
+                <div class="relative bg-black/40 px-3 py-1 rounded-xl border border-white/10">
+                    <i class="fa-solid fa-basket-shopping text-base"></i>
+                    <span id="mobileCartCount" class="ml-1 text-xs font-bold">0</span>
+                </div>
+                <span class="text-sm">Ver Pedido</span>
+            </div>
+            <span id="mobileCartTotal" class="font-mono text-base font-extrabold">$ 0</span>
+        </button>
+    </div>
+
+    <!-- MOBILE CART MODAL -->
+    <div id="mobileCartModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex flex-col justify-end">
+        <div class="bg-brand-card border-t border-brand-border rounded-t-3xl p-5 max-h-[85vh] flex flex-col w-full">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2">Resumen del Pedido</h3>
+                <button onclick="closeMobileCartModal()" class="text-gray-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="mobileCartItemsList" class="flex-1 overflow-y-auto my-4 space-y-3 pr-1 text-sm"></div>
+            <div class="border-t border-zinc-800 pt-3 space-y-3">
+                <div>
+                    <label class="block text-[11px] text-gray-400 mb-1">Observaciones o <!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EL EXPUENTE D' TATA | Menú Interactivo & Pedidos</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#e50914',
+                            redDark: '#b20710',
+                            black: '#0a0a0a',
+                            card: '#141414',
+                            border: '#2a2a2a',
+                            gold: '#dfb15b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Cinzel', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #e50914; }
+
+        .glow-red { box-shadow: 0 0 25px rgba(229, 9, 20, 0.25); }
+        .text-glow { text-shadow: 0 0 12px rgba(229, 9, 20, 0.6); }
+        .bridge-bg {
+            background: linear-gradient(180deg, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.98) 100%), 
+                        url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+        }
+        .category-tab.active {
+            background-color: #e50914;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+        }
+
+        /* Estilos del Alert Flotante Elegante */
+        .alert-floating {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 60;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            max-width: 420px;
+            width: calc(100% - 48px);
+            padding: 18px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            background-color: #f0fdf4;
+            color: #000;
+            border: 1px solid #501;
+            overflow: hidden;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .alert-floating::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #645;
+        }
+        .alert-floating .alert-icon {
+            color: #901;
+            flex-shrink: 0;
+        }
+        .alert-floating .alert-title {
+            margin: 0 0 4px 0;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+        .alert-floating .alert-message {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+        .alert-floating .alert-close {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            opacity: 0.5;
+            transition: opacity 0.2s ease;
+            margin-left: auto;
+            color: inherit;
+        }
+        .alert-floating .alert-close:hover {
+            opacity: 1;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .alert-floating.fade-out {
+            animation: fadeOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+        .alert-floating .alert-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background-color: currentColor;
+            opacity: 0.25;
+            transform-origin: left;
+            animation: shrinkProgress 5s linear forwards;
+        }
+        .alert-floating:hover .alert-progress {
+            animation-play-state: paused;
+        }
+        @keyframes shrinkProgress {
+            from { transform: scaleX(1); }
+            to { transform: scaleX(0); }
+        }
+    </style>
+</head>
+<body class="bg-brand-black text-gray-100 font-sans min-h-screen flex flex-col selection:bg-brand-red selection:text-white pb-24 md:pb-0">
+
+    <!-- ALERTA FLOTANTE AUTOMÁTICA -->
+    <div class="alert-floating" id="autoCloseAlert" role="alert" data-auto-close="10000">
+        <div class="alert-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">¡Recuerda!</h4>
+            <p class="alert-message">Al ordenar a domicilio indica tu dirección y número de contacto para agilizar la toma de tu orden, ¡gracias!</p>
+        </div>
+        <button class="alert-close" aria-label="Cerrar">&times;</button>
+        <div class="alert-progress"></div>
+    </div>
+
+    <!-- HEADER / HERO SECTION -->
+    <header class="bridge-bg border-b border-brand-border sticky top-0 z-30 shadow-2xl backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4 text-center md:text-left">
+                    <div class="w-16 h-16 rounded-full bg-zinc-950 border-2 border-brand-red flex items-center justify-center glow-red flex-shrink-0 p-1 relative overflow-hidden group">
+                        <img src="https://photos.app.goo.gl/EPjapg3ACiFTzEtb8" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0a/e50914?text=🍔';" 
+                             alt="Mascota El Expuente d' Tata" 
+                             class="w-full h-full object-contain drop-shadow-md group-hover:scale-110 transition duration-300">
+                    </div>
+                    <div>
+                        <h1 class="font-serif font-black text-2xl sm:text-3xl tracking-wider text-white text-glow">
+                            EL EXPUENTE D' TATA
+                        </h1>
+                        <p class="text-xs sm:text-sm text-gray-400 font-medium tracking-widest uppercase">
+                           Tradicionalmente delicioso desde <span class="text-brand-red font-bold">1997</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 w-full md:w-auto justify-center">
+                    <a href="https://wa.me/573127474810" target="_blank" class="flex items-center gap-2 bg-zinc-900 border border-zinc-800 hover:border-brand-red px-3 py-2 rounded-xl text-xs sm:text-sm transition-all duration-300">
+                        <i class="fa-brands fa-whatsapp text-emerald-500 text-base"></i>
+                        <div>
+                            <span class="block text-gray-400 text-[10px] leading-tight">Contacto directo</span>
+                            <span class="font-bold text-white tracking-wide">312 7474810</span>
+                        </div>
+                    </a>
+
+                    <button onclick="openMenuImageModal()" class="flex items-center gap-2 bg-gradient-to-r from-brand-red to-brand-redDark text-white px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm hover:brightness-110 transition duration-300 shadow-lg glow-red">
+                        <i class="fa-solid fa-image"></i>
+                        <span>Ver Carta Oficial</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Bar & Filters -->
+            <div class="mt-4 pt-3 border-t border-zinc-800/80 flex flex-col sm:flex-row gap-3 items-center justify-between">
+                <div class="relative w-full sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                    <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Buscar perro, hamburguesa, patacona..." 
+                           class="w-full pl-9 pr-8 py-2 bg-zinc-900/90 border border-zinc-800 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-red transition">
+                    <button id="clearSearch" onclick="clearSearchInput()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="w-full overflow-x-auto no-scrollbar py-1 flex items-center gap-2" id="categoriesContainer"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- PRODUCTS SECTION -->
+        <section class="lg:col-span-8 space-y-8">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <h2 id="currentCategoryTitle" class="text-xl font-bold font-serif text-white flex items-center gap-2">
+                    <span class="w-2 h-6 bg-brand-red rounded-full"></span>
+                    <span id="categoryNameText">Todas las Categorías</span>
+                </h2>
+                <span id="productCounter" class="text-xs text-gray-400 bg-zinc-900 px-3 py-1 rounded-full border border-zinc-800">Cargando...</span>
+            </div>
+
+            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+
+            <div id="noResults" class="hidden text-center py-16 bg-zinc-900/40 rounded-2xl border border-zinc-800">
+                <i class="fa-solid fa-burger text-5xl text-zinc-700 mb-3"></i>
+                <h3 class="text-lg font-semibold text-gray-300">No encontramos productos</h3>
+                <p class="text-xs text-gray-500 mt-1">Intenta buscar con otro término.</p>
+                <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-brand-red text-white text-xs font-semibold rounded-lg hover:brightness-110">Restablecer Menú</button>
+            </div>
+        </section>
+
+        <!-- CART SIDEBAR (DESKTOP) -->
+        <aside class="hidden lg:block lg:col-span-4">
+            <div class="bg-brand-card border border-brand-border rounded-2xl p-5 sticky top-28 shadow-2xl flex flex-col max-h-[calc(100vh-8rem)]">
+                <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
+                    <div class="flex items-center gap-2">
+                        <img src="https://i.ibb.co/L5hY8mB/burger-mascot.png" onerror="this.onerror=null; this.src='https://placehold.co/50x50/0a0a0a/e50914?text=🍔';" alt="Logo" class="w-7 h-7 object-contain">
+                        <h3 class="font-bold text-lg text-white">Tu Pedido</h3>
+                    </div>
+                    <span id="cartBadge" class="bg-brand-red text-white text-xs font-bold px-2.5 py-0.5 rounded-full">0 ítems</span>
+                </div>
+
+                <div id="cartItemsList" class="flex-1 overflow-y-auto my-4 space-y-3 pr-1 text-sm"></div>
+
+                <div class="border-t border-zinc-800 pt-4 space-y-3">
+                    <div class="space-y-1.5 text-xs text-gray-400">
+                        <div class="flex justify-between"><span>Subtotal:</span><span id="cartSubtotal" class="font-medium text-white">$ 0</span></div>
+                        <div class="flex justify-between"><span>Empaque & Envío:</span><span class="text-emerald-400">A convenir</span></div>
+                        <div class="flex justify-between text-base font-bold text-white pt-2 border-t border-zinc-800/60"><span>Total Estimado:</span><span id="cartTotal" class="text-brand-red font-mono">$ 0</span></div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] text-gray-400 mb-1">Notas especiales (ej: Sin cebolla)</label>
+                        <textarea id="orderNotes" rows="2" placeholder="Instrucciones adicionales..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-brand-red resize-none"></textarea>
+                    </div>
+
+                    <button onclick="sendOrderToWhatsApp('desktop')" id="checkoutBtn" disabled class="w-full py-3.5 bg-zinc-800 text-gray-500 font-bold text-sm rounded-xl flex items-center justify-center gap-2 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fa-brands fa-whatsapp text-lg"></i><span>Enviar Pedido por WhatsApp</span>
+                    </button>
+                    
+                    <button onclick="clearCart()" class="w-full py-1 text-center text-[11px] text-gray-500 hover:text-brand-red transition">Vaciar Carrito</button>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- MOBILE FLOATING CART BUTTON -->
+    <div class="lg:hidden fixed bottom-4 right-4 left-4 z-40">
+        <button onclick="openMobileCartModal()" class="w-full bg-gradient-to-r from-brand-red to-brand-redDark text-white p-3.5 rounded-2xl font-bold flex items-center justify-between shadow-2xl border border-red-500/30 glow-red">
+            <div class="flex items-center gap-3">
+                <div class="relative bg-black/40 px-3 py-1 rounded-xl border border-white/10">
+                    <i class="fa-solid fa-basket-shopping text-base"></i>
+                    <span id="mobileCartCount" class="ml-1 text-xs font-bold">0</span>
+                </div>
+                <span class="text-sm">Ver Pedido</span>
+            </div>
+            <span id="mobileCartTotal" class="font-mono text-base font-extrabold">$ 0</span>
+        </button>
+    </div>
+
+    <!-- MOBILE CART MODAL -->
+    <div id="mobileCartModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex flex-col justify-end">
+        <div class="bg-brand-card border-t border-brand-border rounded-t-3xl p-5 max-h-[85vh] flex flex-col w-full">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2">Resumen del Pedido</h3>
+                <button onclick="closeMobileCartModal()" class="text-gray-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="mobileCartItemsList" class="flex-1 overflow-y-auto my-4 space-y-3 pr-1 text-sm"></div>
+            <div class="border-t border-zinc-800 pt-3 space-y-3">
+                <div>
+                    <label class="block text-[11px] text-gray-400 mb-1">Observaciones o cambios</label>
+                    <textarea id="mobileOrderNotes" rows="2" placeholder="Ej: Salsa aparte..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-brand-red resize-none"></textarea>
+                </div>
+                <div class="flex justify-between items-center text-lg font-bold text-white"><span>Total a pagar:</span><span id="mobileModalTotal" class="text-brand-red font-mono">$ 0</span></div>
+                <button onclick="sendOrderToWhatsApp('mobile')" id="mobileCheckoutBtn" disabled class="w-full py-3.5 bg-zinc-800 text-gray-500 font-bold text-sm rounded-xl flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i><span>Confirmar y Enviar Pedido</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENU IMAGE MODAL -->
+    <div id="menuImageModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex flex-col p-4">
+        <div class="flex items-center justify-between mb-3 max-w-5xl mx-auto w-full">
+            <div class="flex items-center gap-2 text-white"><i class="fa-solid fa-book-open text-brand-red"></i><h3 class="font-bold text-base sm:text-lg">Carta Oficial - EL EXPUENTE D' TATA</h3></div>
+            <button onclick="closeMenuImageModal()" class="bg-zinc-800 hover:bg-brand-red text-white w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="flex-1 overflow-auto max-w-5xl mx-auto w-full flex items-center justify-center rounded-2xl bg-zinc-950 border border-zinc-800 p-2">
+            <img src="https://placehold.co/1200x1600/0a0a0a/e50914?text=CARTA+OFICIAL+EL+EXPUENTE+D%27+TATA" alt="Carta Oficial" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl">
+        </div>
+    </div>
+
+    <!-- SCRIPT DE DATOS Y LÓGICA -->
+    <script>
+        const MENU_DATA = [
+            { id: 'hs1', cat: 'Hamburguesas Sencillas', name: 'Con Pollo Desmechado', desc: 'Pollo desmechado, vegetales frescos, queso derretido y salsa especial.', price: 14000, icon: 'fa-burger' },
+            { id: 'hs2', cat: 'Hamburguesas Sencillas', name: 'Con Chuleta', desc: 'Jugosa chuleta de cerdo, vegetales frescos, queso y salsa especial.', price: 16500, icon: 'fa-burger' },
+            { id: 'hs3', cat: 'Hamburguesas Sencillas', name: 'Con Carne Casera', desc: 'Carne de res casera sazonada, vegetales, queso y salsa.', price: 14000, icon: 'fa-burger' },
+            { id: 'hs4', cat: 'Hamburguesas Sencillas', name: 'Con Carne Ranchera', desc: 'Carne estilo ranchera con toque ahumado, vegetales, queso y salsa.', price: 17500, icon: 'fa-burger' },
+            { id: 'he1', cat: 'Hamburguesas Especiales', name: 'Con Carne Ranchera Especial', desc: '2 carnes rancheras, tocineta crujiente, pollo, vegetales, queso y salsa.', price: 34000, icon: 'fa-crown' },
+            { id: 'he2', cat: 'Hamburguesas Especiales', name: 'Hamburguesa Super', desc: 'Carne ranchera, carne casera, chuleta, pollo, vegetales y queso.', price: 36000, icon: 'fa-crown' },
+            { id: 'pt1', cat: 'Pataconas', name: 'Patacona de Pollo', desc: 'Plátano verde crocante con abundante pollo, queso derretido y vegetales.', price: 15000, icon: 'fa-drumstick-bite' },
+            { id: 'pt2', cat: 'Pataconas', name: 'Patacona Mixta', desc: 'Patacón gigante con carne, pollo, queso gratinado y salsas.', price: 22000, icon: 'fa-drumstick-bite' },
+            { id: 'sp1', cat: 'Salchipapa y Variedades', name: 'Salchipapa Sencilla / Junior', desc: 'Papa francesa crujiente, salchicha Zenu, vegetales y codorniz.', price: 10000, icon: 'fa-bacon' },
+            { id: 'sp2', cat: 'Salchipapa y Variedades', name: 'Salchipapa Mediana / Personal', desc: 'Porción personal con salchicha Zenu, papitas y huevos de codorniz.', price: 17000, icon: 'fa-bacon' },
+            { id: 'pr1', cat: 'Perros', name: 'Perro Sencillo', desc: 'Salchicha Zenu, cebolla picada, papita ripio crocante, queso y salsas.', price: 8000, icon: 'fa-hotdog' },
+            { id: 'pr2', cat: 'Perros', name: 'Perro Mixto', desc: 'Salchicha Zenu, pollo desmechado, cebolla, papa ripio y queso.', price: 11500, icon: 'fa-hotdog' },
+            { id: 'sw1', cat: 'Sandwich', name: 'Sandwich Sencillo', desc: 'Jamón, queso derretido, salsas especiales, vegetales y codorniz.', price: 7500, icon: 'fa-bread-slice' },
+            { id: 'jg1', cat: 'Jugos Naturales', name: 'Jugo Natural en Agua', desc: 'Fruta fresca de temporada.', price: 7500, icon: 'fa-glass-water' },
+            { id: 'bb1', cat: 'Bebidas', name: 'P400 Coca Cola', desc: 'Botella personal 400ml refrescante.', price: 4000, icon: 'fa-bottle-water' },
+            { id: 'en1', cat: 'Entradas', name: 'Porción de Papa', desc: 'Papas a la francesa doraditas.', price: 6000, icon: 'fa-bowl-food' }
+        ];
+
+        let cart = {};
+        let activeCategory = 'TODOS';
+        let searchQuery = '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderProducts();
+            updateCartUI();
+            initAutoCloseAlert();
+        });
+
+        // LÓGICA DE LA ALERTA FLOTANTE
+        function initAutoCloseAlert() {
+            const alertElement = document.getElementById('autoCloseAlert');
+            if (!alertElement) return;
+
+            const closeBtn = alertElement.querySelector('.alert-close');
+            const progress = alertElement.querySelector('.alert-progress');
+            const duration = parseInt(alertElement.dataset.autoClose, 10) || 5000;
+            
+            let timeoutId;
+            let startTime = Date.now();
+            let remainingTime = duration;
+
+            const closeAlert = () => {
+                alertElement.classList.add('fade-out');
+                alertElement.addEventListener('animationend', () => alertElement.remove(), { once: true });
+            };
+
+            const startTimer = (time) => {
+                startTime = Date.now();
+                timeoutId = setTimeout(closeAlert, time);
+                if (progress) progress.style.animationPlayState = 'running';
+            };
+
+            const pauseTimer = () => {
+                clearTimeout(timeoutId);
+                remainingTime -= Date.now() - startTime;
+                if (progress) progress.style.animationPlayState = 'paused';
+            };
+
+            startTimer(remainingTime);
+
+            alertElement.addEventListener('mouseenter', pauseTimer);
+            alertElement.addEventListener('mouseleave', () => startTimer(remainingTime));
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    clearTimeout(timeoutId);
+                    closeAlert();
+                });
+            }
+        }
+
+        function formatCOP(amount) {
+            return '$ ' + amount.toLocaleString('es-CO');
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categoriesContainer');
+            const categories = ['TODOS', ...new Set(MENU_DATA.map(item => item.cat))];
+            container.innerHTML = categories.map(cat => `
+                <button onclick="selectCategory('${cat}')" class="category-tab px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-300 border border-zinc-800 ${cat === activeCategory ? 'active' : 'bg-zinc-900 text-gray-300 hover:border-zinc-700'}">
+                    ${cat === 'TODOS' ? '<i class="fa-solid fa-list mr-1.5"></i> Todos' : cat}
+                </button>
+            `).join('');
+        }
+
+        function selectCategory(cat) {
+            activeCategory = cat;
+            document.getElementById('categoryNameText').innerText = cat === 'TODOS' ? 'Todas las Categorías' : cat;
+            renderCategories();
+            renderProducts();
+        }
+
+        function filterProducts() {
+            searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            document.getElementById('clearSearch').classList.toggle('hidden', searchQuery.length === 0);
+            renderProducts();
+        }
+
+        function clearSearchInput() {
+            document.getElementById('searchInput').value = '';
+            searchQuery = '';
+            document.getElementById('clearSearch').classList.add('hidden');
+            renderProducts();
+        }
+
+        function resetFilters() {
+            clearSearchInput();
+            selectCategory('TODOS');
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const noResults = document.getElementById('noResults');
+            
+            const filtered = MENU_DATA.filter(item => {
+                const matchesCat = activeCategory === 'TODOS' || item.cat === activeCategory;
+                const matchesSearch = item.name.toLowerCase().includes(searchQuery) || item.desc.toLowerCase().includes(searchQuery);
+                return matchesCat && matchesSearch;
+            });
+
+            document.getElementById('productCounter').innerText = `${filtered.length} disponible(s)`;
+            noResults.classList.toggle('hidden', filtered.length > 0);
+
+            grid.innerHTML = filtered.map(item => {
+                const qty = cart[item.id] ? cart[item.id].qty : 0;
+                return `
+                <div class="bg-brand-card border border-zinc-800/90 hover:border-brand-red/60 rounded-2xl p-4 flex flex-col justify-between transition-all duration-300">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] uppercase font-bold text-brand-red bg-brand-red/10 px-2 py-0.5 rounded-md border border-brand-red/20">${item.cat}</span>
+                            <i class="fa-solid ${item.icon} text-zinc-600"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base leading-snug">${item.name}</h3>
+                        <p class="text-xs text-gray-400 mt-1.5 leading-relaxed line-clamp-2">${item.desc}</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between">
+                        <span class="font-mono font-bold text-lg text-white">${formatCOP(item.price)}</span>
+                        ${qty === 0 ? `
+                            <button onclick="addToCart('${item.id}')" class="bg-zinc-900 hover:bg-brand-red text-gray-200 hover:text-white px-3 py-2 rounded-xl text-xs font-semibold border border-zinc-700 hover:border-brand-red flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-plus text-xs"></i><span>Agregar</span>
+                            </button>
+                        ` : `
+                            <div class="flex items-center bg-zinc-900 border border-brand-red rounded-xl p-1 gap-2">
+                                <button onclick="updateQty('${item.id}', -1)" class="w-6 h-6 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-minus"></i></button>
+                                <span class="font-mono text-xs font-bold text-white px-1">${qty}</span>
+                                <button onclick="updateQty('${item.id}', 1)" class="w-6 h-6 rounded-lg bg-brand-red hover:bg-red-700 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        `}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function addToCart(id) {
+            const item = MENU_DATA.find(p => p.id === id);
+            if (!item) return;
+            if (cart[id]) { cart[id].qty++; } else { cart[id] = { item, qty: 1 }; }
+            renderProducts();
+            updateCartUI();
+        }
+
+        function updateQty(id, delta) {
+            if (!cart[id]) return;
+            cart[id].qty += delta;
+            if (cart[id].qty <= 0) delete cart[id];
+            renderProducts();
+            updateCartUI();
+        }
+
+        function clearCart() {
+            cart = {};
+            renderProducts();
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const keys = Object.keys(cart);
+            const totalCount = keys.reduce((sum, k) => sum + cart[k].qty, 0);
+            const totalSum = keys.reduce((sum, k) => sum + (cart[k].item.price * cart[k].qty), 0);
+
+            document.getElementById('cartBadge').innerText = `${totalCount} ítems`;
+            document.getElementById('cartSubtotal').innerText = formatCOP(totalSum);
+            document.getElementById('cartTotal').innerText = formatCOP(totalSum);
+            document.getElementById('mobileCartCount').innerText = totalCount;
+            document.getElementById('mobileCartTotal').innerText = formatCOP(totalSum);
+            document.getElementById('mobileModalTotal').innerText = formatCOP(totalSum);
+
+            const hasItems = totalCount > 0;
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            const mobileCheckoutBtn = document.getElementById('mobileCheckoutBtn');
+
+            checkoutBtn.disabled = !hasItems;
+            checkoutBtn.className = hasItems ? "w-full py-3.5 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:brightness-110 text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg transition duration-300 glow-red" : "w-full py-3.5 bg-zinc-800 text-gray-500 font-bold text-sm rounded-xl flex items-center justify-center gap-2 cursor-not-allowed";
+            
+            mobileCheckoutBtn.disabled = !hasItems;
+            mobileCheckoutBtn.className = hasItems ? "w-full py-3.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg" : "w-full py-3.5 bg-zinc-800 text-gray-500 font-bold text-sm rounded-xl flex items-center justify-center gap-2 cursor-not-allowed";
+
+            const listHTML = keys.length === 0 ? `<div class="text-center py-10 text-gray-500 space-y-2"><i class="fa-solid fa-basket-shopping text-3xl text-zinc-700"></i><p class="text-xs">Tu pedido está vacío.</p></div>` :
+                keys.map(k => {
+                    const ci = cart[k];
+                    return `<div class="bg-zinc-900/80 border border-zinc-800 rounded-xl p-2.5 flex items-center justify-between gap-2">
+                        <div class="flex-1 min-w-0"><h4 class="font-semibold text-white text-xs truncate">${ci.item.name}</h4><div class="text-[11px] text-gray-400 font-mono mt-0.5">${formatCOP(ci.item.price)} x ${ci.qty}</div></div>
+                        <div class="flex items-center gap-1.5 bg-black rounded-lg p-1 border border-zinc-800">
+                            <button onclick="updateQty('${k}', -1)" class="w-5 h-5 rounded bg-zinc-800 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-minus"></i></button>
+                            <span class="text-xs font-bold text-white px-1 font-mono">${ci.qty}</span>
+                            <button onclick="updateQty('${k}', 1)" class="w-5 h-5 rounded bg-brand-red text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>`;
+                }).join('');
+
+            document.getElementById('cartItemsList').innerHTML = listHTML;
+            document.getElementById('mobileCartItemsList').innerHTML = listHTML;
+        }
+
+        function openMobileCartModal() { document.getElementById('mobileCartModal').classList.remove('hidden'); }
+        function closeMobileCartModal() { document.getElementById('mobileCartModal').classList.add('hidden'); }
+        function openMenuImageModal() { document.getElementById('menuImageModal').classList.remove('hidden'); }
+        function closeMenuImageModal() { document.getElementById('menuImageModal').classList.add('hidden'); }
+
+        function sendOrderToWhatsApp(source) {
+            const keys = Object.keys(cart);
+            if (keys.length === 0) return;
+            const notes = source === 'mobile' ? document.getElementById('mobileOrderNotes').value.trim() : document.getElementById('orderNotes').value.trim();
+
+            let msg = `🍔 *NUEVO PEDIDO - EL EXPUENTE D' TATA* 🍔\n_Tradicionalmente delicioso desde 1997_\n\n*Detalle del Pedido:*\n`;
+            let total = 0;
+            keys.forEach((k, idx) => {
+                const ci = cart[k];
+                const sub = ci.item.price * ci.qty;
+                total += sub;
+                msg += `${idx + 1}. x${ci.qty} *${ci.item.name}* -> ${formatCOP(sub)}\n`;
+            });
+            msg += `\n💰 *TOTAL ESTIMADO:* *${formatCOP(total)}*`;
+            if (notes) msg += `\n\n📝 *Notas:* ${notes}`;
+            msg += `\n\nPor favor confirma disponibilidad y valor final del domicilio. ¡Gracias!`;
+
+            window.open(`https://wa.me/573127474810?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
+    cambios</label>
+                    <textarea id="mobileOrderNotes" rows="2" placeholder="Ej: Salsa aparte..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-brand-red resize-none"></textarea>
+                </div>
+                <div class="flex justify-between items-center text-lg font-bold text-white"><span>Total a pagar:</span><span id="mobileModalTotal" class="text-brand-red font-mono">$ 0</span></div>
+                <button onclick="sendOrderToWhatsApp('mobile')" id="mobileCheckoutBtn" disabled class="w-full py-3.5 bg-zinc-800 text-gray-500 font-bold text-sm rounded-xl flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i><span>Confirmar y Enviar Pedido</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENU IMAGE MODAL -->
+    <div id="menuImageModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex flex-col p-4">
+        <div class="flex items-center justify-between mb-3 max-w-5xl mx-auto w-full">
+            <div class="flex items-center gap-2 text-white"><i class="fa-solid fa-book-open text-brand-red"></i><h3 class="font-bold text-base sm:text-lg">Carta Oficial - EL EXPUENTE D' TATA</h3></div>
+            <button onclick="closeMenuImageModal()" class="bg-zinc-800 hover:bg-brand-red text-white w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="flex-1 overflow-auto max-w-5xl mx-auto w-full flex items-center justify-center rounded-2xl bg-zinc-950 border border-zinc-800 p-2">
+            <img src="https://placehold.co/1200x1600/0a0a0a/e50914?text=CARTA+OFICIAL+EL+EXPUENTE+D%27+TATA" alt="Carta Oficial" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl">
+        </div>
+    </div>
+
+    <!-- SCRIPT DE DATOS Y LÓGICA -->
+    <script>
+        const MENU_DATA = [
+            { id: 'hs1', cat: 'Hamburguesas Sencillas', name: 'Con Pollo Desmechado', desc: 'Pollo desmechado, vegetales frescos, queso derretido y salsa especial.', price: 14000, icon: 'fa-burger' },
+            { id: 'hs2', cat: 'Hamburguesas Sencillas', name: 'Con Chuleta', desc: 'Jugosa chuleta de cerdo, vegetales frescos, queso y salsa especial.', price: 16500, icon: 'fa-burger' },
+            { id: 'hs3', cat: 'Hamburguesas Sencillas', name: 'Con Carne Casera', desc: 'Carne de res casera sazonada, vegetales, queso y salsa.', price: 14000, icon: 'fa-burger' },
+            { id: 'hs4', cat: 'Hamburguesas Sencillas', name: 'Con Carne Ranchera', desc: 'Carne estilo ranchera con toque ahumado, vegetales, queso y salsa.', price: 17500, icon: 'fa-burger' },
+            { id: 'he1', cat: 'Hamburguesas Especiales', name: 'Con Carne Ranchera Especial', desc: '2 carnes rancheras, tocineta crujiente, pollo, vegetales, queso y salsa.', price: 34000, icon: 'fa-crown' },
+            { id: 'he2', cat: 'Hamburguesas Especiales', name: 'Hamburguesa Super', desc: 'Carne ranchera, carne casera, chuleta, pollo, vegetales y queso.', price: 36000, icon: 'fa-crown' },
+            { id: 'pt1', cat: 'Pataconas', name: 'Patacona de Pollo', desc: 'Plátano verde crocante con abundante pollo, queso derretido y vegetales.', price: 15000, icon: 'fa-drumstick-bite' },
+            { id: 'pt2', cat: 'Pataconas', name: 'Patacona Mixta', desc: 'Patacón gigante con carne, pollo, queso gratinado y salsas.', price: 22000, icon: 'fa-drumstick-bite' },
+            { id: 'sp1', cat: 'Salchipapa y Variedades', name: 'Salchipapa Sencilla / Junior', desc: 'Papa francesa crujiente, salchicha Zenu, vegetales y codorniz.', price: 10000, icon: 'fa-bacon' },
+            { id: 'sp2', cat: 'Salchipapa y Variedades', name: 'Salchipapa Mediana / Personal', desc: 'Porción personal con salchicha Zenu, papitas y huevos de codorniz.', price: 17000, icon: 'fa-bacon' },
+            { id: 'pr1', cat: 'Perros', name: 'Perro Sencillo', desc: 'Salchicha Zenu, cebolla picada, papita ripio crocante, queso y salsas.', price: 8000, icon: 'fa-hotdog' },
+            { id: 'pr2', cat: 'Perros', name: 'Perro Mixto', desc: 'Salchicha Zenu, pollo desmechado, cebolla, papa ripio y queso.', price: 11500, icon: 'fa-hotdog' },
+            { id: 'sw1', cat: 'Sandwich', name: 'Sandwich Sencillo', desc: 'Jamón, queso derretido, salsas especiales, vegetales y codorniz.', price: 7500, icon: 'fa-bread-slice' },
+            { id: 'jg1', cat: 'Jugos Naturales', name: 'Jugo Natural en Agua', desc: 'Fruta fresca de temporada.', price: 7500, icon: 'fa-glass-water' },
+            { id: 'bb1', cat: 'Bebidas', name: 'P400 Coca Cola', desc: 'Botella personal 400ml refrescante.', price: 4000, icon: 'fa-bottle-water' },
+            { id: 'en1', cat: 'Entradas', name: 'Porción de Papa', desc: 'Papas a la francesa doraditas.', price: 6000, icon: 'fa-bowl-food' }
+        ];
+
+        let cart = {};
+        let activeCategory = 'TODOS';
+        let searchQuery = '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderProducts();
+            updateCartUI();
+            initAutoCloseAlert();
+        });
+
+        // LÓGICA DE LA ALERTA FLOTANTE
+        function initAutoCloseAlert() {
+            const alertElement = document.getElementById('autoCloseAlert');
+            if (!alertElement) return;
+
+            const closeBtn = alertElement.querySelector('.alert-close');
+            const progress = alertElement.querySelector('.alert-progress');
+            const duration = parseInt(alertElement.dataset.autoClose, 10) || 5000;
+            
+            let timeoutId;
+            let startTime = Date.now();
+            let remainingTime = duration;
+
+            const closeAlert = () => {
+                alertElement.classList.add('fade-out');
+                alertElement.addEventListener('animationend', () => alertElement.remove(), { once: true });
+            };
+
+            const startTimer = (time) => {
+                startTime = Date.now();
+                timeoutId = setTimeout(closeAlert, time);
+                if (progress) progress.style.animationPlayState = 'running';
+            };
+
+            const pauseTimer = () => {
+                clearTimeout(timeoutId);
+                remainingTime -= Date.now() - startTime;
+                if (progress) progress.style.animationPlayState = 'paused';
+            };
+
+            startTimer(remainingTime);
+
+            alertElement.addEventListener('mouseenter', pauseTimer);
+            alertElement.addEventListener('mouseleave', () => startTimer(remainingTime));
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    clearTimeout(timeoutId);
+                    closeAlert();
+                });
+            }
+        }
+
+        function formatCOP(amount) {
+            return '$ ' + amount.toLocaleString('es-CO');
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categoriesContainer');
+            const categories = ['TODOS', ...new Set(MENU_DATA.map(item => item.cat))];
+            container.innerHTML = categories.map(cat => `
+                <button onclick="selectCategory('${cat}')" class="category-tab px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-300 border border-zinc-800 ${cat === activeCategory ? 'active' : 'bg-zinc-900 text-gray-300 hover:border-zinc-700'}">
+                    ${cat === 'TODOS' ? '<i class="fa-solid fa-list mr-1.5"></i> Todos' : cat}
+                </button>
+            `).join('');
+        }
+
+        function selectCategory(cat) {
+            activeCategory = cat;
+            document.getElementById('categoryNameText').innerText = cat === 'TODOS' ? 'Todas las Categorías' : cat;
+            renderCategories();
+            renderProducts();
+        }
+
+        function filterProducts() {
+            searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            document.getElementById('clearSearch').classList.toggle('hidden', searchQuery.length === 0);
+            renderProducts();
+        }
+
+        function clearSearchInput() {
+            document.getElementById('searchInput').value = '';
+            searchQuery = '';
+            document.getElementById('clearSearch').classList.add('hidden');
+            renderProducts();
+        }
+
+        function resetFilters() {
+            clearSearchInput();
+            selectCategory('TODOS');
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const noResults = document.getElementById('noResults');
+            
+            const filtered = MENU_DATA.filter(item => {
+                const matchesCat = activeCategory === 'TODOS' || item.cat === activeCategory;
+                const matchesSearch = item.name.toLowerCase().includes(searchQuery) || item.desc.toLowerCase().includes(searchQuery);
+                return matchesCat && matchesSearch;
+            });
+
+            document.getElementById('productCounter').innerText = `${filtered.length} disponible(s)`;
+            noResults.classList.toggle('hidden', filtered.length > 0);
+
+            grid.innerHTML = filtered.map(item => {
+                const qty = cart[item.id] ? cart[item.id].qty : 0;
+                return `
+                <div class="bg-brand-card border border-zinc-800/90 hover:border-brand-red/60 rounded-2xl p-4 flex flex-col justify-between transition-all duration-300">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] uppercase font-bold text-brand-red bg-brand-red/10 px-2 py-0.5 rounded-md border border-brand-red/20">${item.cat}</span>
+                            <i class="fa-solid ${item.icon} text-zinc-600"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base leading-snug">${item.name}</h3>
+                        <p class="text-xs text-gray-400 mt-1.5 leading-relaxed line-clamp-2">${item.desc}</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between">
+                        <span class="font-mono font-bold text-lg text-white">${formatCOP(item.price)}</span>
+                        ${qty === 0 ? `
+                            <button onclick="addToCart('${item.id}')" class="bg-zinc-900 hover:bg-brand-red text-gray-200 hover:text-white px-3 py-2 rounded-xl text-xs font-semibold border border-zinc-700 hover:border-brand-red flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-plus text-xs"></i><span>Agregar</span>
+                            </button>
+                        ` : `
+                            <div class="flex items-center bg-zinc-900 border border-brand-red rounded-xl p-1 gap-2">
+                                <button onclick="updateQty('${item.id}', -1)" class="w-6 h-6 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-minus"></i></button>
+                                <span class="font-mono text-xs font-bold text-white px-1">${qty}</span>
+                                <button onclick="updateQty('${item.id}', 1)" class="w-6 h-6 rounded-lg bg-brand-red hover:bg-red-700 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        `}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function addToCart(id) {
+            const item = MENU_DATA.find(p => p.id === id);
+            if (!item) return;
+            if (cart[id]) { cart[id].qty++; } else { cart[id] = { item, qty: 1 }; }
+            renderProducts();
+            updateCartUI();
+        }
+
+        function updateQty(id, delta) {
+            if (!cart[id]) return;
+            cart[id].qty += delta;
+            if (cart[id].qty <= 0) delete cart[id];
+            renderProducts();
+            updateCartUI();
+        }
+
+        function clearCart() {
+            cart = {};
+            renderProducts();
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const keys = Object.keys(cart);
+            const totalCount = keys.reduce((sum, k) => sum + cart[k].qty, 0);
+            const totalSum = keys.reduce((sum, k) => sum + (cart[k].item.price * cart[k].qty), 0);
+
+            document.getElementById('cartBadge').innerText = `${totalCount} ítems`;
+            document.getElementById('cartSubtotal').innerText = formatCOP(totalSum);
+            document.getElementById('cartTotal').innerText = formatCOP(totalSum);
+            document.getElementById('mobileCartCount').innerText = totalCount;
+            document.getElementById('mobileCartTotal').innerText = formatCOP(totalSum);
+            document.getElementById('mobileModalTotal').innerText = formatCOP(totalSum);
+
+            const hasItems = totalCount > 0;
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            const mobileCheckoutBtn = document.getElementById('mobileCheckoutBtn');
+
+            checkoutBtn.disabled = !hasItems;
+            checkoutBtn.className = hasItems ? "w-full py-3.5 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:brightness-110 text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg transition duration-300 glow-red" : "w-full py-3.5 bg-zinc-800 text-gray-500 font-bold text-sm rounded-xl flex items-center justify-center gap-2 cursor-not-allowed";
+            
+            mobileCheckoutBtn.disabled = !hasItems;
+            mobileCheckoutBtn.className = hasItems ? "w-full py-3.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg" : "w-full py-3.5 bg-zinc-800 text-gray-500 font-bold text-sm rounded-xl flex items-center justify-center gap-2 cursor-not-allowed";
+
+            const listHTML = keys.length === 0 ? `<div class="text-center py-10 text-gray-500 space-y-2"><i class="fa-solid fa-basket-shopping text-3xl text-zinc-700"></i><p class="text-xs">Tu pedido está vacío.</p></div>` :
+                keys.map(k => {
+                    const ci = cart[k];
+                    return `<div class="bg-zinc-900/80 border border-zinc-800 rounded-xl p-2.5 flex items-center justify-between gap-2">
+                        <div class="flex-1 min-w-0"><h4 class="font-semibold text-white text-xs truncate">${ci.item.name}</h4><div class="text-[11px] text-gray-400 font-mono mt-0.5">${formatCOP(ci.item.price)} x ${ci.qty}</div></div>
+                        <div class="flex items-center gap-1.5 bg-black rounded-lg p-1 border border-zinc-800">
+                            <button onclick="updateQty('${k}', -1)" class="w-5 h-5 rounded bg-zinc-800 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-minus"></i></button>
+                            <span class="text-xs font-bold text-white px-1 font-mono">${ci.qty}</span>
+                            <button onclick="updateQty('${k}', 1)" class="w-5 h-5 rounded bg-brand-red text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>`;
+                }).join('');
+
+            document.getElementById('cartItemsList').innerHTML = listHTML;
+            document.getElementById('mobileCartItemsList').innerHTML = listHTML;
+        }
+
+        function openMobileCartModal() { document.getElementById('mobileCartModal').classList.remove('hidden'); }
+        function closeMobileCartModal() { document.getElementById('mobileCartModal').classList.add('hidden'); }
+        function openMenuImageModal() { document.getElementById('menuImageModal').classList.remove('hidden'); }
+        function closeMenuImageModal() { document.getElementById('menuImageModal').classList.add('hidden'); }
+
+        function sendOrderToWhatsApp(source) {
+            const keys = Object.keys(cart);
+            if (keys.length === 0) return;
+            const notes = source === 'mobile' ? document.getElementById('mobileOrderNotes').value.trim() : document.getElementById('orderNotes').value.trim();
+
+            let msg = `🍔 *NUEVO PEDIDO - EL EXPUENTE D' TATA* 🍔\n_Tradicionalmente delicioso desde 1997_\n\n*Detalle del Pedido:*\n`;
+            let total = 0;
+            keys.forEach((k, idx) => {
+                const ci = cart[k];
+                const sub = ci.item.price * ci.qty;
+                total += sub;
+                msg += `${idx + 1}. x${ci.qty} *${ci.item.name}* -> ${formatCOP(sub)}\n`;
+            });
+            msg += `\n💰 *TOTAL ESTIMADO:* *${formatCOP(total)}*`;
+            if (notes) msg += `\n\n📝 *Notas:* ${notes}`;
+            msg += `\n\nPor favor confirma disponibilidad y valor final del domicilio. ¡Gracias!`;
+
+            window.open(`https://wa.me/573127474810?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
