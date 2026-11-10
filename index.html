@@ -581,7 +581,7 @@
                         customers[email].address = address;
                         customers[email].totalOrders += 1;
                         customers[email].totalSpent += total;
-                        customers[email].lastOrderDate = new Date().toISOString();
+                        customers[email].lastOrderDate = new Date().toISOString(); 
                     }
                     localStorage.setItem(CUSTOMERS_KEY, JSON.stringify(customers));
                 } catch (err) {
